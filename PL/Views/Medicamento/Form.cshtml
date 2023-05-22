@@ -1,0 +1,126 @@
+﻿@model ML.Medicamento
+@{
+    ViewData["Title"] = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Usuario</h2>
+        </div>
+    </div>
+
+    <div class="row">
+
+        @using (Html.BeginForm("Form", "Medicamento", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            <div class="container">
+                <div class="row">
+                    @Html.LabelFor(model => Model.IdMedicamento, new { @class = "visually-hidden" })
+                    @Html.TextBoxFor(model => model.IdMedicamento, new { @class = "visually-hidden form-control" })
+                    @Html.ValidationMessageFor(model => model.IdMedicamento)
+                </div>
+                <div class="row">
+                    <div class="row align-items-start">
+                        <div class="col-6">
+                            @Html.LabelFor(model => model.Nombre)
+                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id = "txtUserName", @onkeypress="SoloLetras(event,'lblNombre','txtUserName)"})
+                            @Html.ValidationMessageFor(model => model.Nombre, null, new{ @class = "text-danger"})
+                            @Html.Label(null,"",new{@id="lblUserName"})
+                        </div>
+                        <div class="col-3">
+                            @Html.LabelFor(model => model.Precio)
+                            @Html.TextBoxFor(model => model.Precio, new { @class = "form-control", @id = "txtNombre", @onkeypress="SoloLetras(event,'lblNombre','txtNombre)" })
+                            @Html.ValidationMessageFor(model => model.Precio, null, new{ @class = "text-danger"})
+                            @Html.Label(null,"",new{@id="lblUserName"})
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <input id="fuImage" type='file' class="form-control" name="fuImage" onchange="validateFile(this), readURL(this);" />
+
+                        <br>
+                        @if (Model.Imagen != null)
+                        {
+                            <img id="img" src="data:image/*;base64,@Model.Imagen" style="width:100px; height:100px" />
+                        }
+                        else
+                        {
+                            <img id="img" src="~/Imagenes/user.png" style="width100px ; height:100px" />
+                        }
+
+                        @Html.HiddenFor(model=>model.Imagen)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <input type="submit" value="Guardar" class="btn btn-success" />
+                    </div>
+                    <div class="col-3">
+                        @Html.ActionLink("Regresar", "GetAll", "Meicamento", htmlAttributes: new { @class = "btn btn-danger" })
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @*@Scripts.Render("~/bundles/jquery")*@
+    <script type="text/javascript">
+
+
+        function validateFile() {
+            var allowedExtension = ['jpeg', 'jpg', 'png', 'jpng'];
+            var fileExtension = document.getElementById('fuImage').value.split('.').pop().toLowerCase();
+            var isValidFile = false;
+            for (var index in allowedExtension) {
+                if (fileExtension === allowedExtension[index]) {
+                    isValidFile = true;
+                    break;
+                }
+            }
+            if (!isValidFile) {
+                alert('Las extenciones permitidas son: *.' + allowedExtension.join(',*.'));
+                document.getElementById('fuImage').value = ""
+            }
+            return isValidFile;
+        }
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+        function SoloLetras(e, idLabel, idTextbox) {
+            var caracter = e.key;
+            if (!/^[a-zA-Z]/g.test(caracter)) {
+                $('#' + idLabel).text("Solo se aceptan letras");
+                $('#' + idLabel).css({ "color": "red" });
+                $('#' + idTextbox).css({ "border-color": "red", "background-color": "#f8d7da" });
+                return false;
+            }
+            else {
+                $('#' + controlId).text("");
+                $('#' + idTextbox).css({ "border-color": "green" });
+                return true;
+            }
+        }
+    </script>
+    }
+
+

@@ -1,0 +1,67 @@
+﻿@model ML.Medicamento
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+<div class="row">
+    <div style="float:right;">
+        @Html.ActionLink("Agregar Medicamento", "Form", "Usuario", htmlAttributes: new { @class = "btn btn-primary" })
+    </div>
+</div>
+<hr />
+
+<div class="row">
+    @if (Model.Medicamentos != null)
+    {
+        <table class="table primary table-bordered border-primary " id="tblUsuario">
+            <thead>
+                <tr>
+
+                    <td class="table-primary text-center" style=" font-weight:bold;">Editar</td>
+                    <td class="d-none">IdMedicamento</td>
+                    <td class="table-primary text-center" style=" font-weight:bold;">Nombre</td>
+                    <td class="table-primary text-center" style=" font-weight:bold;">Precio</td>
+                    <td class="table-primary text-center" style=" font-weight:bold;">Imagen</td>
+                    <td class="table-primary text-center" style=" font-weight:bold;">Eliminar</td>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (ML.Medicamento medicamento in Model.Medicamentos)
+                {
+                    <tr>
+                        <td class="text-center"><a class="btn btn-warning" href="@Url.Action("Form", "Medicamento", new { IdMedicamento = medicamento.IdMedicamento })"><i class="fa-regular fa-pen-to-square" style="color: red;"></i> </a></td>
+                        <td class="d-none">@medicamento.IdMedicamento</td>
+                        <td class="text-center">@medicamento.Nombre</td> 
+                        <td class="text-center">@medicamento.Precio</td>
+                        <td class="text-center">
+                            @if (medicamento.Imagen != null && medicamento.Imagen != "")
+                            {
+
+                                <img id="Img" src="data:image/*;base64,@medicamento.Imagen" style="width:100px ; height:100px" />
+
+                            }
+                            else
+                            {
+                                <img id="Img" src="~/Imagenes/SinImagen.png" style="width:100px ; height:100px; text-align: center; vertical-align: middle;" />     <i class=""></i>
+                            }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;"><a class="btn btn-danger" href="@Url.Action("Delete", "Medicamento", new { IdMedicamento = medicamento.IdMedicamento })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="fa-regular fa-trash-can"></i></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">Ocurrio un error al realizar la consulta </div>
+    }
+</div>
+
+
