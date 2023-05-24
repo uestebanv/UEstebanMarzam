@@ -30,7 +30,8 @@
                                         <span class="float-end price-hp">@medicamento.Precio</span>
                                     </div>
                                     <h5 class="card-title">@medicamento.Nombre</h5>
-                                    <div class="text-center my-4"> <a href="#" class="btn btn-warning">Compra</a> </div>
+                                    
+                                    @Html.ActionLink("","Carrito","Compra" ,new { IdMedicamento = medicamento.IdMedicamento }, htmlAttributes: new { @class = "btn btn-success bi bi-cart4"})
                                 </div>
                             </div>
                         </div>

@@ -1,12 +1,8 @@
 ﻿@model ML.Usuario
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Sesion";
     Layout = null;
-    //Layout = "~/Views/Shared/_Layout.cshtml";
-
-
 }
-
 
 <!DOCTYPE html>
 
@@ -27,48 +23,74 @@
         <div class="topLayer">
             <div class="left">
                 <div class="content">
-                    <h2>Nuevo Usuario</h2>
-                    <form id="form-signup" method="post" onsubmit="return false;">
+                    <h2>Sign Up</h2>
+
+                    @using (Html.BeginForm("AddLogin", "Login", FormMethod.Post, new { enctype = "multipart/form-data", id = "form-signup" }))
+                    {
                         <div class="form-element form-stack">
-                            <label for="email" class="form-label">Email</label>
-                            <input id="email" type="email" name="email">
+                            @Html.LabelFor(model => model.IdUsuario)
+                            @Html.TextBoxFor(model => model.IdUsuario, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.IdUsuario, null, new{ @class = "text-danger"})
                         </div>
                         <div class="form-element form-stack">
-                            <label for="username-signup" class="form-label">Username</label>
-                            <input id="username-signup" type="text" name="username">
+                            @Html.LabelFor(model => model.Nombre)
+                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.Nombre, null, new{ @class = "text-danger"})
                         </div>
                         <div class="form-element form-stack">
-                            <label for="password-signup" class="form-label">Password</label>
-                            <input id="password-signup" type="password" name="password">
+                            @Html.LabelFor(model => model.ApellidoPaterno)
+                            @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.ApellidoPaterno, null, new{ @class = "text-danger"})
                         </div>
-                        <div class="form-element form-checkbox">
-                            <input id="confirm-terms" type="checkbox" name="confirm" value="yes" class="checkbox">
-                            <label for="confirm-terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                        <div class="form-element form-stack">
+                            @Html.LabelFor(model => model.ApellidoMaterno)
+                            @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.ApellidoMaterno, null, new{ @class = "text-danger"})
+                        </div>
+                        <div class="form-element form-stack">
+                            @Html.LabelFor(model => model.UserName)
+                            @Html.TextBoxFor(model => model.UserName, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.UserName, null, new{ @class = "text-danger"})
+                        </div>
+                        <div class="form-element form-stack">
+                            @Html.LabelFor(model => model.Contraseña)
+                            @Html.TextBoxFor(model => model.Contraseña, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.Contraseña, null, new{ @class = "text-danger"})
                         </div>
                         <div class="form-element form-submit">
-                            <button id="signUp" class="signup" type="submit" name="signup">Nuevo Registro</button>
-                            @*<button id="goLeft" class="signup off">Iniciar</button>*@
+                            <button id="signUp" class="signup" type="submit" name="signup">Sign up</button>
                         </div>
-                    </form>
+
+                    }
+                    <div class="form-element form-submit">
+                        <button id="goLeft" class="signup off">Log In</button>
+                    </div>
+
+
                 </div>
             </div>
             <div class="right">
                 <div class="content">
-                    <h2>Iniciar</h2>
-                    <form id="form-login" method="post" onsubmit="return false;">
+                    <h2>Login</h2>
+                    @using (Html.BeginForm("Iniciar", "Login", FormMethod.Post, new { enctype = "multipart/form-data", id = "form-login" }))
+                    {
                         <div class="form-element form-stack">
-                            <label for="username-login" class="form-label">Username</label>
-                            <input id="username-login" type="text" name="username">
+                            @Html.LabelFor(model => model.UserName)
+                            @Html.TextBoxFor(model => model.UserName, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.UserName, null, new{ @class = "text-danger"})
                         </div>
                         <div class="form-element form-stack">
-                            <label for="password-login" class="form-label">Password</label>
-                            <input id="password-login" type="password" name="password">
+                            @Html.LabelFor(model => model.Contraseña)
+                            @Html.TextBoxFor(model => model.Contraseña, new { @class = "form-label", @id = "txtUserName", @for="email" })
+                            @Html.ValidationMessageFor(model => model.Contraseña, null, new{ @class = "text-danger"})
                         </div>
                         <div class="form-element form-submit">
-                            <button id="logIn" class="login" type="submit" name="login">Iniciar</button>
-                            <button id="goRight" class="login off" name="signup">Nuevo Usuario</button>
+                            <button id="logIn" class="login" type="submit" name="login">Log In</button>
                         </div>
-                    </form>
+                    }
+                    <div class="form-element form-submit">
+                        <button id="goRight" class="login off" name="signup">Sign Up</button>
+                    </div>
                 </div>
             </div>
         </div>

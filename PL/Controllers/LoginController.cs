@@ -5,13 +5,13 @@ namespace PL.Controllers
     public class LoginController : Controller
     {
         [HttpGet]
-        public ActionResult Login()
+        public ActionResult Sesion()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Login(string username, string contraseña)
+        public ActionResult Iniciar(string username, string contraseña)
         {
             ML.Result result = BL.Usuario.GetById(username);
             
@@ -38,7 +38,7 @@ namespace PL.Controllers
         }
 
         [HttpPost]
-        public ActionResult Form(ML.Usuario usuario)
+        public ActionResult AddLogin(ML.Usuario usuario)
         {
             ML.Result result = new ML.Result();
 

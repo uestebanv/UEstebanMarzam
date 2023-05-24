@@ -2,25 +2,58 @@
 using System;
 using System.Collections.Generic;
 
+
+
 namespace PL.Controllers
 {
     public class MedicamentoController : Controller
     {
+        private readonly IConfiguration _configuration;
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment;
+
+        public MedicamentoController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+        {
+            _configuration = configuration;
+            this.hostingEnvironment = hostingEnvironment;
+        }
+
         public ActionResult GetAll()
         {
             ML.Medicamento medicamento = new ML.Medicamento();
             
             ML.Result result = BL.Medicamento.GetAll();
             
-            if(result.Correct)
+            try
             {
-                medicamento.Medicamentos = result.Objects;
-                return View(medicamento);
+                using (var client = new HttpClient())
+                {
+                    string urlApi = _configuration["urlApi"];
+                    client.BaseAddress = new Uri(urlApi);
+
+                    var responseTask = client.GetAsync("Medicamento/GetAll");
+                    responseTask.Wait();
+
+                    var resultServicio = responseTask.Result;
+
+                    if (resultServicio.IsSuccessStatusCode)
+                    {
+                        var readTask = resultServicio.Content.ReadFromJsonAsync<ML.Result>();
+                        readTask.Wait();
+
+                        foreach (var resultItem in readTask.Result.Objects)
+                        {
+                            ML.Medicamento resultItemList = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Medicamento>(resultItem.ToString());
+                            result.Objects.Add(resultItemList);
+                        }
+                    }
+                    medicamento.Medicamentos = result.Objects;
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                return View(medicamento);
             }
+            return View(medicamento);
         }
 
         [HttpGet]
@@ -33,29 +66,43 @@ namespace PL.Controllers
             {
                 //ML.Result result = BL.Medicamento.Add(medicamento);
                 return View(medicamento);
-                
+
             }
             else
             {
-                ML.Result result = BL.Medicamento.GetById(idMedicamento.Value);
-                if (result.Correct)
+                using (var client = new HttpClient())
                 {
-                    medicamento = (ML.Medicamento)result.Object;
-                    return View(medicamento);
-                }
-                else
-                {
-                    ViewBag.Message = "Error al consultar la infromacion";
-                    return View("Modal");
+                    string urlApi = _configuration["urlApi"];
+                    client.BaseAddress = new Uri(urlApi);
+
+                    var responseTask = client.PostAsJsonAsync<int>("Medicamento/GetById/{idMedicamento}", idMedicamento.Value);
+                    responseTask.Wait();
+
+                    var result = responseTask.Result;
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        ML.Result result1 = new ML.Result();
+                        var registro = result.Content.ReadFromJsonAsync<ML.Result>();
+                        ML.Medicamento resultItemList = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Medicamento>(registro.Result.Object.ToString());
+                        result1.Object = resultItemList;
+                        medicamento = (ML.Medicamento)result1.Object;
+
+                        return PartialView(medicamento);
+                    }
+                    else
+                    {
+                        ViewBag.Mensaje = "No se ha Podido consultar la Informacion del Usuario";
+                        return PartialView("Modal");
+                    }
                 }
             }
+
         }
 
         [HttpPost]
         public ActionResult Form(ML.Medicamento medicamento)
         {
-            ML.Result result = new ML.Result();
-
             IFormFile file = Request.Form.Files["fuImage"];
             if(file != null)
             {
@@ -66,30 +113,46 @@ namespace PL.Controllers
             
             if (medicamento.IdMedicamento == 0)
             {
-                result = BL.Medicamento.Add(medicamento);
-                if(result.Correct)
+                using (var client = new HttpClient())
                 {
-                    ViewBag.Message = "Se agrego el registro";
+                    client.BaseAddress = new Uri(_configuration["urlApi"]);
+                    var postTask = client.PostAsJsonAsync<ML.Medicamento>("Medicamento/Add", medicamento);
+                    postTask.Wait();
+
+                    var result = postTask.Result;
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        ViewBag.Message = "Se inserto el registro";
+                        return View("Modal");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Ocurrio un error al insertar el registro";
+                        return View("Modal");
+                    }
                 }
-                else
-                {
-                    ViewBag.Message = "Ocurrio un error al agregar el registro";
-                }
-                return View("Modal");
 
             }
             else
             {
-                result = BL.Medicamento.Update(medicamento);
-                if(result.Correct)
+                using (var client = new HttpClient())
                 {
-                    ViewBag.Message = "Se actualizo el registro";
-                    return View("Modal");
-                }
-                else
-                {
-                    ViewBag.Message = "Error en la Actualizacion de datos";
-                    return View("Modal");
+                    client.BaseAddress = new Uri(_configuration["urlApi"]);
+                    var postTask = client.PostAsJsonAsync<ML.Medicamento>("Medicamento/Update", medicamento);
+                    postTask.Wait();
+
+                    var result = postTask.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        ViewBag.Message = "Se actualizo la infromacion del Usuario";
+                        return View("Modal");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Error al actualizar la informacio";
+                        return View("Modal");
+                    }
                 }
             }
         }

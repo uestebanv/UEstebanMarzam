@@ -17,28 +17,25 @@
 <div class="row">
     @if (Model.Medicamentos != null)
     {
-        <table class="table primary table-bordered border-primary " id="tblUsuario">
+        <table class="table table-sm">
             <thead>
                 <tr>
-
-                    <td class="table-primary text-center" style=" font-weight:bold;">Editar</td>
-                    <td class="d-none">IdMedicamento</td>
-                    <td class="table-primary text-center" style=" font-weight:bold;">Nombre</td>
-                    <td class="table-primary text-center" style=" font-weight:bold;">Precio</td>
-                    <td class="table-primary text-center" style=" font-weight:bold;">Imagen</td>
-                    <td class="table-primary text-center" style=" font-weight:bold;">Eliminar</td>
-
+                    <th class="text-center" scope="col">Editar</th>
+                    <th class="d-none" scope="col">IdMedicamento</th>
+                    <th class="text-center" scope="col">Nombre</th>
+                    <th class="text-center" scope="col">Precio</th>
+                    <th class="text-center" scope="col">Imagen</th>
+                    <th class="text-center" scope="col">Eliminar</th>
                 </tr>
             </thead>
             <tbody>
-
                 @foreach (ML.Medicamento medicamento in Model.Medicamentos)
                 {
                     <tr>
-                        <td class="text-center"><a class="btn btn-warning" href="@Url.Action("Form", "Medicamento", new { IdMedicamento = medicamento.IdMedicamento })"><i class="fa-regular fa-pen-to-square" style="color: red;"></i> </a></td>
-                        <td class="d-none">@medicamento.IdMedicamento</td>
-                        <td class="text-center">@medicamento.Nombre</td> 
-                        <td class="text-center">@medicamento.Precio</td>
+                        <td class="text-center" style="text-align: center; vertical-align: middle;"><a class="btn btn-warning bi bi-list" href="@Url.Action("Form", "Medicamento", new { IdMedicamento = medicamento.IdMedicamento })"></a></td>
+                        <td class="d-none" style="text-align: center; vertical-align: middle;"><i class=""></i>@medicamento.IdMedicamento</td>
+                        <td class="text-md-center">@medicamento.Nombre</td>
+                        <td class="text-center">$ @medicamento.Precio</td>
                         <td class="text-center">
                             @if (medicamento.Imagen != null && medicamento.Imagen != "")
                             {
@@ -51,12 +48,11 @@
                                 <img id="Img" src="~/Imagenes/SinImagen.png" style="width:100px ; height:100px; text-align: center; vertical-align: middle;" />     <i class=""></i>
                             }
                         </td>
-                        <td style="text-align: center; vertical-align: middle;"><a class="btn btn-danger" href="@Url.Action("Delete", "Medicamento", new { IdMedicamento = medicamento.IdMedicamento })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="fa-regular fa-trash-can"></i></a></td>
+                        <td style="text-align: center; vertical-align: middle;"><a class="btn btn-danger bi bi-trash" href="@Url.Action("Delete", "Medicamento", new { IdMedicamento = medicamento.IdMedicamento })" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="fa-regular fa-trash-can"></i></a></td>
                     </tr>
                 }
             </tbody>
         </table>
-
     }
     else
     {
